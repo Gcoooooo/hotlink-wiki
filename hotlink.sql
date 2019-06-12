@@ -36,7 +36,7 @@ CREATE TABLE `t_lottery` (
   `activity_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_lottery_activity_id_idx` (`activity_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,7 +68,7 @@ CREATE TABLE `t_lottery_prize_info` (
   PRIMARY KEY (`id`),
   KEY `fk_lottery_prize_info_lottery_id_idx` (`lottery_id`),
   CONSTRAINT `fk_lottery_prize_info_lottery_id` FOREIGN KEY (`lottery_id`) REFERENCES `t_lottery` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -103,7 +103,7 @@ CREATE TABLE `t_lottery_prize_pool` (
   KEY `fk_lottery_prize_pool_prize_id_idx` (`prize_id`),
   CONSTRAINT `fk_lottery_prize_pool_prize_id` FOREIGN KEY (`prize_id`) REFERENCES `t_lottery_prize_info` (`id`),
   CONSTRAINT `fk_lottery_prize_pool_prize_status_id` FOREIGN KEY (`prize_status_id`) REFERENCES `t_lottery_prize_status` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=343 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=343 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -128,7 +128,7 @@ CREATE TABLE `t_lottery_prize_status` (
   `code` varchar(45) NOT NULL,
   `description` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -158,7 +158,7 @@ CREATE TABLE `t_lottery_prize_turntable` (
   KEY `fk_lottery_prize_turntable_lottery_id_idex` (`lottery_id`),
   CONSTRAINT `fk_lottery_prize_turntable_lottery_id` FOREIGN KEY (`lottery_id`) REFERENCES `t_lottery` (`id`),
   CONSTRAINT `fk_lottery_prize_turntable_prize_id` FOREIGN KEY (`prize_id`) REFERENCES `t_lottery_prize_info` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=120 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,7 +189,7 @@ CREATE TABLE `t_lottery_remaining_chance` (
   PRIMARY KEY (`id`),
   KEY `fk_lottery_remaining_chance_activity_id_idx` (`activity_id`),
   KEY `fk_lottery_remaining_chance_user_id_idx` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -228,7 +228,7 @@ CREATE TABLE `t_lottery_winning_result` (
   KEY `fk_lottery_winning_result_prize_id_idx` (`prize_id`),
   CONSTRAINT `fk_lottery_winning_result_prize_id` FOREIGN KEY (`prize_id`) REFERENCES `t_lottery_prize_info` (`id`),
   CONSTRAINT `fk_lottery_winning_result_prize_pool_id` FOREIGN KEY (`prize_pool_id`) REFERENCES `t_lottery_prize_pool` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -946,7 +946,7 @@ CREATE TABLE `t_animation_configuration` (
   KEY `fk_resource_activity_id_idx` (`activity_id`),
   KEY `fk_resource_template_id_idx` (`template_id`),
   CONSTRAINT `fk_animation_configuratio_template_id` FOREIGN KEY (`template_id`) REFERENCES `t_template` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -973,7 +973,7 @@ CREATE TABLE `t_animation_lib` (
   `animation_pic_url` varchar(130) NOT NULL,
   `description` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1009,7 +1009,7 @@ CREATE TABLE `t_basic_resource` (
   KEY `fk_resource_resource_type_id` (`resource_type_id`),
   CONSTRAINT `fk_resource_resource_type_id` FOREIGN KEY (`resource_type_id`) REFERENCES `t_basic_resource_type` (`id`),
   CONSTRAINT `fk_resource_template_id` FOREIGN KEY (`template_id`) REFERENCES `t_template` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=69 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1034,7 +1034,7 @@ CREATE TABLE `t_basic_resource_type` (
   `code` varchar(45) NOT NULL,
   `description` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1059,7 +1059,7 @@ CREATE TABLE `t_panorama_lib` (
   `panorama_url` varchar(130) NOT NULL,
   `description` varchar(200) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1093,7 +1093,7 @@ CREATE TABLE `t_template` (
   `function_list` varchar(130) DEFAULT NULL,
   `pic_url` varchar(130) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
