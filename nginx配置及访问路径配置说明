@@ -1,0 +1,187 @@
+1.https证书放在../nginx/cert文件夹中，以ssl.key和ssl.pem命名
+2.nginx配置文件在../nginx/conf的nginx.conf文件中，配置如下：
+
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+    worker_connections  1024;
+}
+
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    #access_log  logs/access.log  main;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+
+    gzip  on;
+   
+    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+    gzip_buffers 16 8k;
+    gzip_comp_level 6;
+    gzip_min_length 1k;
+    gzip_types text/css application/javascript text/xml text/javascript text/xsd text/xsl text/richtext application/xml application/octet-stream model/x3d+binary image/png image/jpeg;
+    gzip_vary on;
+
+    ssl_certificate      ../cert/ssl.pem;
+    ssl_certificate_key  ../cert/ssl.key;
+ 
+    ssl_session_timeout 30m;
+    ssl_session_cache shared:SSL:10m;
+
+    #request header size config
+    client_header_buffer_size 20k;
+    large_client_header_buffers 4 32k;
+ 
+    client_body_buffer_size 128k;
+    client_max_body_size 10m;    
+
+    #response header size config
+    proxy_connect_timeout 10;
+    proxy_read_timeout 180;
+    proxy_send_timeout 5;
+    proxy_buffer_size 16k;
+    proxy_buffers 4 32k;
+    proxy_busy_buffers_size 96k;
+    proxy_temp_file_write_size 96k;
+    proxy_temp_path /tmp/temp_dir;
+    proxy_cache_path /tmp/cache levels=1:2 keys_zone=cache_one:50m inactive=1d max_size=10g;
+
+    server {
+        listen       80;
+        server_name test.wechatvr.org;
+        rewrite ^ https://$host$request_uri? permanent;
+    }
+
+    server {
+        listen       80;
+        listen       443 ssl;
+        server_name  localhost;
+        root /data/wwwroot/default;
+        #charset koi8-r;
+
+        #access_log  logs/host.access.log  main;
+
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+
+        location /zuul {
+            proxy_pass http://47.94.13.250:8040; //自行修改服务器ip及端口
+            proxy_set_header host $host;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header referer "-";
+            proxy_redirect default;
+        }
+
+        location /animation/ {
+            proxy_pass https://content-local.wechatvr.org/animation/;
+            root   html;
+        }
+
+        location /advertisement/ {
+            proxy_pass https://content-local.wechatvr.org/advertisement/;
+            root   html;
+        }
+
+
+
+        #error_page  404              /404.html;
+
+        # redirect server error pages to the static page /50x.html
+        #
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+
+        # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+        #
+        #location ~ \.php$ {
+        #    proxy_pass   http://127.0.0.1;
+        #}
+
+        # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+        #
+        #location ~ \.php$ {
+        #    root           html;
+        #    fastcgi_pass   127.0.0.1:9000;
+        #    fastcgi_index  index.php;
+        #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+        #    include        fastcgi_params;
+        #}
+
+        # deny access to .htaccess files, if Apache's document root
+        # concurs with nginx's one
+        #
+        #location ~ /\.ht {
+        #    deny  all;
+        #}
+    }
+
+
+    # another virtual host using mix of IP-, name-, and port-based configuration
+    #
+    #server {
+    #    listen       8000;
+    #    listen       somename:8080;
+    #    server_name  somename  alias  another.alias;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+
+    # HTTPS server
+    #
+    #server {
+    #    listen       443 ssl;
+    #    server_name  localhost;
+
+    #    ssl_certificate      cert.pem;
+    #    ssl_certificate_key  cert.key;
+
+    #    ssl_session_cache    shared:SSL:1m;
+    #    ssl_session_timeout  5m;
+
+    #    ssl_ciphers  HIGH:!aNULL:!MD5;
+    #    ssl_prefer_server_ciphers  on;
+
+    #    location / {
+    #        root   html;
+    #        index  index.html index.htm;
+    #    }
+    #}
+
+}
+
+3.请求通过zuul进行路由转发，在hotlink-zuul中对各个微服务的路由路径的进行了如下配置：
+zuul.routes.HOTLINK-WEBAR=/webar/**
+zuul.routes.HOTLINK-RESOURCE=/resource/**
+zuul.routes.HOTLINK-LOTTERY=/lottery/**
+zuul.routes.HOTLINK-ACTIVITY=/activity/**
+zuul.routes.HOTLINK-USER=/user/**
+
+在访问某个微服务时，需要以“https://域名/zuul/路由路径”进行访问，如访问hotlink-webar微服务的图像识别接口时，以https://test.wechatvr.org/zuul/webar/webar/match的形式进行访问，其中“....../webar/match”是在项目的Contorller类中配置的接口访问路径。
